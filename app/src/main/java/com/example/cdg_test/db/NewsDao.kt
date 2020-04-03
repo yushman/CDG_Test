@@ -22,5 +22,5 @@ interface NewsDao {
     fun loadAllNews(): LiveData<List<NewsDto>>
 
     @Query("select * from newsdto where id like :sourceId")
-    fun loadNewsBySource(sourceId: String): LiveData<NewsDto>
+    fun loadNewsBySource(sourceId: String): LiveData<List<NewsDto>>
 }

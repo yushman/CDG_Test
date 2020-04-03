@@ -1,18 +1,22 @@
 package com.example.cdg_test.manager
 
-import androidx.lifecycle.MutableLiveData
-import com.example.cdg_test.di.NetworkingScope
-import com.example.cdg_test.di.PersistanceScope
-import com.example.cdg_test.model.item_model.SourcesItem
-import com.example.cdg_test.model.repo.FavoriteSourcesRepo
-import com.example.cdg_test.model.repo.SourcesRepo
+import androidx.lifecycle.MediatorLiveData
+import com.example.cdg_test.model.dto_model.NewsDto
+import com.example.cdg_test.model.item_model.NewsItem
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
-class SourceNewsManager(sourcesItem: SourcesItem): AbstractManager() {
-    private val sourceId = sourcesItem.source.id
-    val news = newsRepo.loadNewsBySources(sourceId)
+class SourceNewsManager(private val sourceId: String): AbstractManager() {
+
+    val news: MediatorLiveData<List<NewsItem>> = MediatorLiveData()
+    private val newsDto = newsRepo.loadNewsBySources(sourceId)
+
+    init {
+        news.addSource(newsDto){ postNews(it) }
+    }
+
+    private fun postNews(newsDto: List<NewsDto>?) = persistanceScope.launch {
+        news.postValue(newsDto?.map { NewsItem(it) })
+    }
 
     fun fetchNewsBySource(page: Int = 1) = networkingScope.launch {
         val news = newsRepo.fetchNewsBySource(sourceId, page)

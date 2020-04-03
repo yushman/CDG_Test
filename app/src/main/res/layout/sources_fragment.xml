@@ -5,9 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.SourcesFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_sources_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
-
+        android:scrollbars="vertical"
+        android:verticalScrollbarPosition="defaultPosition"
+        tools:listitem="@layout/item_sources" />
 </FrameLayout>

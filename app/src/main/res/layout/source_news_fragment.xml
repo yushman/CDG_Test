@@ -5,9 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".presentation.fragment.SourceNewsFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_source_news_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
-
+        android:scrollbars="vertical"
+        android:verticalScrollbarPosition="defaultPosition"
+        tools:listitem="@layout/item_news" />
 </FrameLayout>

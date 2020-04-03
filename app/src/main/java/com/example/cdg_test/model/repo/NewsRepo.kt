@@ -7,14 +7,14 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class NewsRepo: KoinComponent{
-    val dao by inject<NewsDao>()
+    private val dao by inject<NewsDao>()
     private val api by inject<NewsApiService>()
 
     suspend fun fetchNewsByQuery(q: String, page: Int = 1) = api.getNewsByQuery(q, page).articles
 
     suspend fun fetchNewsBySource(sourceId: String, page: Int = 1) = api.getNewsBySource(sourceId, page).articles
 
-    fun loadNewsBySources(sourceId: String) = dao.loadAllNews()
+    fun loadNewsBySources(sourceId: String) = dao.loadNewsBySource(sourceId)
 
     fun updateNewsInDb(news: List<NewsDto>) = news.forEach { dao.insertNews(it) }
 }

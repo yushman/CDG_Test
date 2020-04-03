@@ -1,13 +1,18 @@
 package com.example.cdg_test.presentation.fragment
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-import com.example.cdg_test.R
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.cdg_test.databinding.SourcesFragmentBinding
+import com.example.cdg_test.model.item_model.SourcesItem
+import com.example.cdg_test.presentation.adapter.SourcesAdapter
+import com.google.android.material.snackbar.Snackbar
 
 class SourcesFragment : Fragment() {
 
@@ -16,18 +21,38 @@ class SourcesFragment : Fragment() {
     }
 
     private lateinit var viewModel: SourcesViewModel
+    private lateinit var binding: SourcesFragmentBinding
+    private lateinit var sourcesAdapter: SourcesAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.sources_fragment, container, false)
+        binding = SourcesFragmentBinding.inflate(inflater, container, false)
+        initVM()
+        initViews()
+        return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private fun initViews() {
+        sourcesAdapter = SourcesAdapter{ addToFavoriteClick(it)}
+        binding.rvSourcesFragment.apply {
+            adapter = sourcesAdapter
+            layoutManager = LinearLayoutManager(this.context)
+            addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+        }
+    }
+
+    private fun initVM() {
         viewModel = ViewModelProviders.of(this).get(SourcesViewModel::class.java)
-        // TODO: Use the ViewModel
+        viewModel.sources.observe(this.viewLifecycleOwner, Observer { sourcesAdapter.update(it) })
+        viewModel.fetchSources()
+    }
+
+    private fun addToFavoriteClick(sourcesItem: SourcesItem) {
+        viewModel.addTofavorites(sourcesItem)
+        Snackbar.make(binding.root, sourcesItem.source.name + " was added to favorites", Snackbar.LENGTH_LONG).show()
+        sourcesAdapter.updateItem(sourcesItem)
     }
 
 }

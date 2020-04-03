@@ -1,19 +1,26 @@
 package com.example.cdg_test.manager
 
-import androidx.lifecycle.MutableLiveData
-import com.example.cdg_test.di.NetworkingScope
-import com.example.cdg_test.di.PersistanceScope
-import com.example.cdg_test.model.item_model.SourcesItem
-import com.example.cdg_test.model.repo.FavoriteSourcesRepo
-import com.example.cdg_test.model.repo.SourcesRepo
+import androidx.lifecycle.MediatorLiveData
+import com.example.cdg_test.model.dto_model.SourcesDto
+import com.example.cdg_test.model.item_model.FavoritesItem
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 class FavoriteSourcesManager: AbstractManager() {
-    val sources: MutableLiveData<List<SourcesItem>> = MutableLiveData()
 
-    fun remmoveFromFavorites(sourcesItem: SourcesItem) = persistanceScope.launch {
-        favoriteSourcesRepo.removeFromFavorites(sourcesItem.source)
+    val favorites: MediatorLiveData<List<FavoritesItem>> = MediatorLiveData()
+    private val favoritesDto = favoriteSourcesRepo.loadFavorites()
+
+    init {
+        favorites.addSource(favoritesDto){ postFavorites(it) }
+    }
+
+    fun remmoveFromFavorites(favoritesItem: FavoritesItem) = persistanceScope.launch {
+        favoriteSourcesRepo.removeFromFavorites(favoritesItem.source)
+    }
+
+    private fun postFavorites(favoritesDto: List<SourcesDto>?) = persistanceScope.launch {
+        favoritesDto?.let { list ->
+            favorites.postValue(list.map { FavoritesItem(it) })
+        }
     }
 }

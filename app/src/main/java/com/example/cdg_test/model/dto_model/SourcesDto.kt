@@ -5,12 +5,12 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class SourcesDto(
-    @PrimaryKey
+    @PrimaryKey()
     val id: String,
     val name: String,
     val description: String,
-    val url: String,
-    val category: String,
-    val languge: String,
-    val country: String
+    val url: String?,
+    val category: String?,
+    val languge: String?,
+    val country: String?
 )

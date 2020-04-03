@@ -6,7 +6,7 @@ import com.example.cdg_test.model.dto_model.SourcesDto
 
 @Dao
 interface SourcesDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertSource(sourcesDto: SourcesDto)
 
     @Update
@@ -20,4 +20,7 @@ interface SourcesDao {
 
     @Query("select * from sourcesdto")
     fun loadAllSources(): LiveData<List<SourcesDto>>
+
+    @Query("select * from sourcesdto where id like :id")
+    fun selectSourceById(id: String): SourcesDto?
 }

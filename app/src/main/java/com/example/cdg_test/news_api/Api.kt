@@ -35,7 +35,7 @@ class Api {
         .build()
 
     private fun provideLogInterceptor() = HttpLoggingInterceptor()
-        .apply { level = HttpLoggingInterceptor.Level.BODY }
+        .apply { level = HttpLoggingInterceptor.Level.BASIC }
 
     private fun provideAuthInterceptor() = Interceptor {chain->
         val newUrl = chain.request().url

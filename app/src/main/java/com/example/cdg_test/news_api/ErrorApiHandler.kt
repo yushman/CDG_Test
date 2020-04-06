@@ -8,17 +8,14 @@ import timber.log.Timber
 
 class ErrorApiHandler(private val retrofit: Retrofit): KoinComponent{
 
-//    private val coroutineScope by inject<NetworkingScope>()
-
     fun parseError(response: Response): ErrorResponseDto? {
-        var error: ErrorResponseDto? =null
+        val error: ErrorResponseDto? =null
         val converter = retrofit.responseBodyConverter<ErrorResponseDto>(ErrorResponseDto::class.java, emptyArray())
-        response.body?.let {
-            error = converter.convert(it)
-            Timber.e("Network Error with code ${error?.code} - ${error?.message}")
+        response.body?.let { body ->
+            converter.convert(body)?.let {
+                Timber.e("Network Error with code ${it.code} - ${it.message}")
+            }
         }
-//        coroutineScope.coroutineContext.cancel()
-
         return error
     }
 }

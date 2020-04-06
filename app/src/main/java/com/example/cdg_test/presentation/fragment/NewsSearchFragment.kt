@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -49,21 +50,29 @@ class NewsSearchFragment : Fragment() {
                 }
             })
         }
-        binding.svNewSearchFragment.setOnQueryTextListener(object :
-            android.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let {
-                    viewModel.proceedNewSearch(it)
-                    return true
+        binding.svNewSearchFragment.apply {
+            setOnQueryTextListener(object :
+                SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    query?.let {
+                        viewModel.proceedNewSearch(it)
+                        return true
+                    }
+                    return false
                 }
-                return false
-            }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return false
+                }
 
-        })
+            })
+            isIconified = false
+            focusable = SearchView.FOCUSABLE
+            requestFocus()
+            requestFocusFromTouch()
+            setQuery("", false)
+
+        }
     }
 
     private fun initVM() {

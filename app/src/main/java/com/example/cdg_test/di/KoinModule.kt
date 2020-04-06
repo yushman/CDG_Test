@@ -27,7 +27,7 @@ class KoinModule {
         single { NewsRepo() }
         single { FavoriteSourcesRepo() }
         single { SourcesRepo() }
-        single { Api(androidContext()) }
+        single { Api() }
         single { get<Api>().createService(NewsApiService::class.java) }
         single { PersistanceScope() }
         single { NetworkingScope() }

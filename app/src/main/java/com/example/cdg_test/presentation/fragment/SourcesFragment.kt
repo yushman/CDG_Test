@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cdg_test.databinding.SourcesFragmentBinding
 import com.example.cdg_test.model.item_model.SourcesItem
 import com.example.cdg_test.presentation.adapter.SourcesAdapter
 import com.google.android.material.snackbar.Snackbar
+import org.koin.android.ext.android.inject
 
 class SourcesFragment : Fragment() {
 
@@ -20,7 +20,7 @@ class SourcesFragment : Fragment() {
         fun newInstance() = SourcesFragment()
     }
 
-    private lateinit var viewModel: SourcesViewModel
+    private val viewModel by inject<SourcesViewModel>()
     private lateinit var binding: SourcesFragmentBinding
     private lateinit var sourcesAdapter: SourcesAdapter
 
@@ -44,7 +44,6 @@ class SourcesFragment : Fragment() {
     }
 
     private fun initVM() {
-        viewModel = ViewModelProviders.of(this).get(SourcesViewModel::class.java)
         viewModel.sources.observe(this.viewLifecycleOwner, Observer { sourcesAdapter.update(it) })
         viewModel.fetchSources()
     }

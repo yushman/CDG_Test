@@ -7,5 +7,5 @@ import org.koin.core.inject
 class SourcesRepo: KoinComponent{
     private val api by inject<NewsApiService>()
 
-    suspend fun fetchSources() = api.getAllSources().sources
+    suspend fun fetchSources() = api.getAllSources()?.sources
 }

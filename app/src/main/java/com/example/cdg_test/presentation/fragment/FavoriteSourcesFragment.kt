@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +13,8 @@ import com.example.cdg_test.R
 import com.example.cdg_test.databinding.FavoriteSourcesFragmentBinding
 import com.example.cdg_test.model.item_model.FavoritesItem
 import com.example.cdg_test.presentation.adapter.FavoritesAdapter
+import com.example.cdg_test.presentation.adapter.ItemTouchHelperCallback
+import org.koin.android.ext.android.inject
 
 class FavoriteSourcesFragment : Fragment() {
 
@@ -21,7 +22,7 @@ class FavoriteSourcesFragment : Fragment() {
         fun newInstance() = FavoriteSourcesFragment()
     }
 
-    private lateinit var viewModel: FavoriteSourcesViewModel
+    private val viewModel by inject<FavoriteSourcesViewModel>()
     private lateinit var binding: FavoriteSourcesFragmentBinding
     private lateinit var favoritesAdapter: FavoritesAdapter
 
@@ -41,15 +42,18 @@ class FavoriteSourcesFragment : Fragment() {
             adapter = favoritesAdapter
             layoutManager = LinearLayoutManager(this.context)
             addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+
         }
-        val touchCallback = ItemTouchHelperCallback { removeFromFavorites(favoritesAdapter.getItem(it)) }
+        val touchCallback =
+            ItemTouchHelperCallback {
+                removeFromFavorites(favoritesAdapter.getItem(it))
+            }
         val touchHelper = ItemTouchHelper(touchCallback)
         touchHelper.attachToRecyclerView(binding.rvFavoritesFragment)
 
     }
 
     private fun initVM() {
-        viewModel = ViewModelProviders.of(this).get(FavoriteSourcesViewModel::class.java)
         viewModel.favorites.observe(this.viewLifecycleOwner, Observer { favoritesAdapter.update(it) })
     }
 
@@ -58,7 +62,7 @@ class FavoriteSourcesFragment : Fragment() {
     }
 
     private fun listNewsClick(favoritesItem: FavoritesItem) {
-        val newsFragment = SourceNewsFragment.newInstance(favoritesItem)
+        val newsFragment = NewsBySourceFragment.newInstance(favoritesItem)
         parentFragmentManager.beginTransaction()
             .replace(R.id.main_container, newsFragment)
             .addToBackStack(null)

@@ -10,9 +10,9 @@ class NewsRepo: KoinComponent{
     private val dao by inject<NewsDao>()
     private val api by inject<NewsApiService>()
 
-    suspend fun fetchNewsByQuery(q: String, page: Int = 1) = api.getNewsByQuery(q, page).articles
+    suspend fun fetchNewsByQuery(q: String, page: Int) = api.getNewsByQuery(q, page)
 
-    suspend fun fetchNewsBySource(sourceId: String, page: Int = 1) = api.getNewsBySource(sourceId, page).articles
+    suspend fun fetchNewsBySource(sourceId: String, page: Int) = api.getNewsBySource(sourceId, page)
 
     fun loadNewsBySources(sourceId: String) = dao.loadNewsBySource(sourceId)
 

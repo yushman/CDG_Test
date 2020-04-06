@@ -4,12 +4,22 @@ import androidx.lifecycle.MutableLiveData
 import com.example.cdg_test.model.dto_model.SourcesDto
 import com.example.cdg_test.model.item_model.SourcesItem
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 class SourcesManager: AbstractManager() {
     val sources: MutableLiveData<List<SourcesItem>> = MutableLiveData()
 
     fun fetchSources() = networkingScope.launch {
-        sources.postValue(sourcesRepo.fetchSources().map { toSourceItem(it) })
+        supervisorScope {
+            try {
+                sourcesRepo.fetchSources()?.let { list ->
+                    sources.postValue(list.map { toSourceItem(it) })
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+        }
     }
 
     fun addToFavorites(sourcesItem: SourcesItem) = persistanceScope.launch {

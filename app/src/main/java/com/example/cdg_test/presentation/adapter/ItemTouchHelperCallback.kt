@@ -1,4 +1,4 @@
-package com.example.cdg_test.presentation.fragment
+package com.example.cdg_test.presentation.adapter
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
